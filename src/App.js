@@ -1,23 +1,65 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState } from "react";
+import Title from "./components/Title";
+import Modal from "./components/Modal";
+import Eventlist from "./components/Eventlist";
 
 function App() {
+  //useState
+
+  const [showEvents, setShowEvents] = useState(false);
+  const [showModel, setShowModel] = useState(false);
+  const [events, setEvents] = useState([]);
+
+  //functions
+
+  function addEvents(event) {
+    setEvents((prevState) => {
+      return [...prevState, event];
+    });
+  }
+
+  //handle-click functions
+
+  function handleClickDelete(id) {
+    setEvents((prevEvents) => {
+      return prevEvents.filter((event) => {
+        return id !== event.id;
+      });
+    });
+    console.log(events);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Title title="TO DO LIST" subTitle="YOUR TO DO LIST " />
+
+      {showEvents && (
+        <button
+          onClick={() => {
+            setShowEvents(false);
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          Hide Events
+        </button>
+      )}
+
+      {!showEvents && (
+        <button
+          onClick={() => {
+            setShowEvents(true);
+          }}
+        >
+          Show Events
+        </button>
+      )}
+
+      {showEvents && (
+        <Eventlist handleClickDelete={handleClickDelete} events={events} />
+      )}
+      <button onClick={() => setShowModel(true)}>Add New Event</button>
+
+      {showModel && <Modal setShowModel={setShowModel} addEvents={addEvents} />}
     </div>
   );
 }
